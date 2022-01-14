@@ -1,0 +1,9 @@
+[submodule "mros2"]
+	path = mros2
+	url = git@github.com:mROS-base/mros2.git
+[submodule "lwip-posix"]
+	path = lwip-posix
+	url = git@github.com:mROS-base/lwip-posix.git
+[submodule "cmsis-posix"]
+	path = cmsis-posix
+	url = git@github.com:mROS-base/cmsis-posix.git
