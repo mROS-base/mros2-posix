@@ -20,10 +20,7 @@ add_compile_definitions(OS_POSIX)
 add_compile_definitions(osObjectsExternal)
 add_compile_definitions(STM32F767xx)
 
-#set(MROS2_APPNAME "pub_string")
-#set(MROS2_APPNAME "sub_string")
-#set(MROS2_APPNAME "udp_multicast")
-set(MROS2_APPNAME "fastdds-comp")
+set(MROS2_APPNAME "template-appname")
 
 # CMSIS lib
 add_subdirectory(cmsis-posix)

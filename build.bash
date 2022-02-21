@@ -1,12 +1,41 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]
+if [ $# -ne 1 -a $# -ne 2 ]
 then
-	echo "Usage: $0 {all|clean}"
+	echo "Usage: $0 {all|up|clean} [appname]"
+	echo "appname:"
+	for i in `ls workspace/src`
+	do
+		echo "  $i"
+	done
 	exit 1
 fi
 
 OPT=${1}
+
+if [ $# -eq 2 ]
+then
+	APPNAME=${2}
+	cat CMakeLists.tpl | sed 's/template-appname/'${APPNAME}'/g' > CMakeLists.txt
+else
+	if [ -f CMakeLists.txt ]
+	then
+		:
+	else
+		APPNAME=pub_string
+		cat CMakeLists.tpl | sed 's/template-appname/'${APPNAME}'/g' > CMakeLists.txt
+
+	fi
+fi
+
+if [ -d workspace/src/${APPNAME} ]
+then
+	:
+else
+	echo "ERROR: can not find appname=${APPNAME} on workspace/src"
+	exit 1
+fi
+
 
 if [ -d cmake-build ]
 then
