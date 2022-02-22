@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# -ne 1 -a $# -ne 2 ]
+if [ $# -ne 2 ]
 then
-	echo "Usage: $0 {all|up|clean} [appname]"
+	echo "Usage: $0 appname {all|up|clean}"
 	echo "appname:"
 	for i in `ls workspace/src`
 	do
@@ -11,22 +11,8 @@ then
 	exit 1
 fi
 
-OPT=${1}
-
-if [ $# -eq 2 ]
-then
-	APPNAME=${2}
-	cat CMakeLists.tpl | sed 's/template-appname/'${APPNAME}'/g' > CMakeLists.txt
-else
-	if [ -f CMakeLists.txt ]
-	then
-		:
-	else
-		APPNAME=pub_string
-		cat CMakeLists.tpl | sed 's/template-appname/'${APPNAME}'/g' > CMakeLists.txt
-
-	fi
-fi
+APPNAME=${1}
+OPT=${2}
 
 if [ -d workspace/src/${APPNAME} ]
 then
@@ -95,13 +81,13 @@ then
 	build_subdirectory lwip-posix 
 	build_subdirectory mros2 CMAKE_OS_POSIX=true RTPS_CONFIG_INCLUDE_DIR=`pwd`/workspace/include
 	cd cmake-build
-	cmake ..
+	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
 	cd ..
 elif [ ${OPT} = "up" ]
 then
 	cd cmake-build
-	cmake ..
+	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
 	cd ..
 else

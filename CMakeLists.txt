@@ -20,7 +20,8 @@ add_compile_definitions(OS_POSIX)
 add_compile_definitions(osObjectsExternal)
 add_compile_definitions(STM32F767xx)
 
-set(MROS2_APPNAME "template-appname")
+message(STATUS "CMAKE_APPNAME=${CMAKE_APPNAME}")
+set(MROS2_APPNAME ${CMAKE_APPNAME})
 
 # CMSIS lib
 add_subdirectory(cmsis-posix)
