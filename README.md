@@ -148,7 +148,7 @@ data: Hello from mROS 2!! 8
 ```
 
 ## Example applications
-Please see [workspace](https://github.com/mROS-base/mros2-posix/tree/main/workspace/src) for example applications.
+Please see [workspace](https://github.com/mROS-base/mros2-posix/tree/main/workspace) for example applications.
 
 ## Submodules and Licenses
 The source code of this repository itself is published under Apache License 2.0.
