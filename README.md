@@ -12,10 +12,10 @@ mROS 2 consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP
   * Ubuntu 20.04 LTS
 * mROS 2 host environment
   * WSL1 on Windows 10
-  * Linux(TODO)
+  * Ubuntu 20.04 LTS
   * docker
     * docker compose on Docker Desktop
-    * docker compose on Linux(TODO)
+    * docker compose on Linux
 * mROS 2 Build and execution OS
   * Ubuntu 20.04 LTS
   * Ubuntu 18.04 LTS
