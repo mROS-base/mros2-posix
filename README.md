@@ -89,7 +89,7 @@ bash build.bash clean
 bash build.bash all pub_string
 ```
 
-Once build process can be completed, you can find `mros2-posix` executable in `cmake-build/`. 
+Once build process can be completed, you can find `mros2-posix` executable in `cmake_build/`. 
 
 ### Run the example
 
@@ -97,13 +97,13 @@ Once build process can be completed, you can find `mros2-posix` executable in `c
 Run the mros2-posix with your host `IP address` and `netmask`.
 
 ```
-./cmake-build/mros2-posix <IP address> <netmask>
+./cmake_build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
 
 ```
-$ ./cmake-build/mros2-posix 192.168.11.49 255.255.255.0
+$ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0
   :
 LOG_NOTICE : 00000000.128 : thread_udp_recv:UP: mcp=0x7fb1c0000e20
 LOG_DEBUG : 00000000.129 : [MROS2LIB] successfully created participant

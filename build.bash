@@ -16,12 +16,12 @@ APPNAME=${2}
 
 function clean_subdirectory()
 {
-	rm -rf ${1}/cmake-build/CMakeFiles
-	rm -f ${1}/cmake-build/cmake_install.cmake
-	rm -f ${1}/cmake-build/CMakeCache.txt
-	rm -f ${1}/cmake-build/install_manifest.txt
-	rm -f ${1}/cmake-build/*.a
-	rm -f ${1}/cmake-build/Makefile
+	rm -rf ${1}/cmake_build/CMakeFiles
+	rm -f ${1}/cmake_build/cmake_install.cmake
+	rm -f ${1}/cmake_build/CMakeCache.txt
+	rm -f ${1}/cmake_build/install_manifest.txt
+	rm -f ${1}/cmake_build/*.a
+	rm -f ${1}/cmake_build/Makefile
 	rm -rf ${1}/public/*
 }
 if [ ${OPT} == "clean" ];
@@ -31,7 +31,7 @@ then
 	clean_subdirectory cmsis-posix 
 	clean_subdirectory lwip-posix 
 	clean_subdirectory mros2
-	cd cmake-build
+	cd cmake_build
 	rm -rf ./*
 	cd ..
 	echo "build clean is completed"
@@ -47,11 +47,11 @@ else
 fi
 
 
-if [ -d cmake-build ]
+if [ -d cmake_build ]
 then
 	:
 else
-	mkdir cmake-build
+	mkdir cmake_build
 fi
 
 function download_files()
@@ -63,7 +63,7 @@ function download_files()
 }
 function build_subdirectory()
 {
-	local dir=${1}/cmake-build
+	local dir=${1}/cmake_build
 	if [ -d ${dir} ]
 	then
 		:
@@ -94,13 +94,13 @@ then
 	download_files lwip-posix 
 	build_subdirectory lwip-posix 
 	build_subdirectory mros2 CMAKE_OS_POSIX=true RTPS_CONFIG_INCLUDE_DIR=`pwd`/workspace/include
-	cd cmake-build
+	cd cmake_build
 	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
 	cd ..
 elif [ ${OPT} = "up" ]
 then
-	cd cmake-build
+	cd cmake_build
 	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
 	cd ..
