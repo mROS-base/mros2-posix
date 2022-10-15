@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -gt 2 ]
+if [ $# -gt 2 ] || [ $# -eq 0 ]
 then
 	echo "Usage: $0 {all|up|clean} appname"
 	echo "appname:"
@@ -30,6 +30,17 @@ then
 	rm -rf cmake_build/
 	echo "build clean is completed"
 	exit 0
+fi
+
+if [ $# -ne 2 ]
+then
+	echo "Usage: $0 {all|up|clean} appname"
+	echo "appname:"
+	for i in `ls workspace/src`
+	do
+		echo "  $i"
+	done
+	exit 1
 fi
 
 if [ -d workspace/src/${APPNAME} ]
@@ -98,5 +109,8 @@ then
 	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
 	cd ..
+else
+	echo "ERROR: wrong operation ${OPT}"
+	exit 1
 fi
 
