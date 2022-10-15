@@ -28,7 +28,7 @@ Install [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation.html) on 
 ### mROS 2 host environment
 1. Install build tools on the mROS 2 host environment.
 ```
-$ apt-get update && apt-get install -y \
+apt-get update && apt-get install -y \
 	git	\
 	build-essential	\
 	wget	\
@@ -45,8 +45,9 @@ $ apt-get update && apt-get install -y \
 	netcat \
 	cmake \
 	&& apt-get clean
-$ apt update -y
-$ apt upgrade -y
+
+apt update -y
+apt upgrade -y
 ```
 2. Please check the `IP address` and `netmask` of the host environment's ethernet connecting on your LAN.
 
@@ -75,7 +76,7 @@ This section explains how to build and execute mROS 2 with Linux process, using 
 First of all, clone this repository. Note that **--recursive** is mandatory.
 
 ```
-$ git clone --recursive git@github.com:mROS-base/mros2-posix.git
+git clone --recursive https://github.com/mROS-base/mros2-posix.git
 ```
 
 Please set your `IP address` on `IP_ADDRESS` in [mros2-posix/workspace/include/rtps/config.h](https://github.com/mROS-base/mros2-posix/blob/main/workspace/include/rtps/config.h).
@@ -83,17 +84,12 @@ Please set your `IP address` on `IP_ADDRESS` in [mros2-posix/workspace/include/r
 Move to mros2-posix and build with the target app name (please see workspace/README.md for another examples).
 
 ```
-$ cd mros2-posix
-$ bash build.bash clean
-$ bash build.bash all pub_string
+cd mros2-posix
+bash build.bash clean
+bash build.bash all pub_string
 ```
 
-Once build process can be completed, you can find mros2-posix as the binary on cmake-build. 
-
-```
-$ ls cmake-build/mros2-posix
-cmake-build/mros2-posix
-```
+Once build process can be completed, you can find `mros2-posix` executable in `cmake-build/`. 
 
 ### Run the example
 
@@ -101,7 +97,7 @@ cmake-build/mros2-posix
 Run the mros2-posix with your host `IP address` and `netmask`.
 
 ```
-$ ./cmake-build/mros2-posix <IP address> <netmask>
+./cmake-build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
@@ -129,8 +125,8 @@ LOG_NOTICE : 00000006.198 : publishing msg: 'Hello from mROS 2!! 6'
 Launch ROS 2 topic echo node.
 
 ```
-$ source /opt/ros/foxy/setup.bash
-$ ros2 topic echo /to_stm
+source /opt/ros/foxy/setup.bash
+ros2 topic echo /to_stm
 ```
 
 Now, you can confirm the message.
