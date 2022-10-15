@@ -6,17 +6,13 @@ mROS 2 consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP
 
 ## Supported environment
 
-* ROS 2 version
-  * [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html)
-* ROS 2 host environment
-  * Ubuntu 20.04 LTS
-* mROS 2 host environment
-  * WSL1 on Windows 10
-  * Ubuntu 20.04 LTS
-  * docker
-    * docker compose on Docker Desktop
-    * docker compose on Linux
-* mROS 2 Build and execution OS
+* Host environment for development: ROS 2 and Ubuntu versions
+  - [ROS 2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) on Ubuntu 22.04 LTS
+  * [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html) on Ubuntu 20.04 LTS
+  * the followings can be also used but not fully tested
+	  * WSL1 on Windows 10
+	  * docker compose
+* mROS 2 Build and execution environment
   * Ubuntu 20.04 LTS
   * Ubuntu 18.04 LTS
 
