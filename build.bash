@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]
+if [ $# -gt 2 ]
 then
-	echo "Usage: $0 appname {all|up|clean}"
+	echo "Usage: $0 {all|up|clean} appname"
 	echo "appname:"
 	for i in `ls workspace/src`
 	do
@@ -11,8 +11,32 @@ then
 	exit 1
 fi
 
-APPNAME=${1}
-OPT=${2}
+OPT=${1}
+APPNAME=${2}
+
+function clean_subdirectory()
+{
+	rm -rf ${1}/cmake-build/CMakeFiles
+	rm -f ${1}/cmake-build/cmake_install.cmake
+	rm -f ${1}/cmake-build/CMakeCache.txt
+	rm -f ${1}/cmake-build/install_manifest.txt
+	rm -f ${1}/cmake-build/*.a
+	rm -f ${1}/cmake-build/Makefile
+	rm -rf ${1}/public/*
+}
+if [ ${OPT} == "clean" ];
+then
+	echo "build operation is set to clean"
+	rm -rf ./lwip-posix/Third_Party/STM32CubeF7
+	clean_subdirectory cmsis-posix 
+	clean_subdirectory lwip-posix 
+	clean_subdirectory mros2
+	cd cmake-build
+	rm -rf ./*
+	cd ..
+	echo "build clean is completed"
+	exit 0
+fi
 
 if [ -d workspace/src/${APPNAME} ]
 then
@@ -62,16 +86,6 @@ function build_subdirectory()
 	fi
 	cd ../..
 }
-function clean_subdirectory()
-{
-	rm -rf ${1}/cmake-build/CMakeFiles
-	rm -f ${1}/cmake-build/cmake_install.cmake
-	rm -f ${1}/cmake-build/CMakeCache.txt
-	rm -f ${1}/cmake-build/install_manifest.txt
-	rm -f ${1}/cmake-build/*.a
-	rm -f ${1}/cmake-build/Makefile
-	rm -rf ${1}/public/*
-}
 
 if [ ${OPT} = "all" ]
 then
@@ -89,14 +103,6 @@ then
 	cd cmake-build
 	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make
-	cd ..
-else
-	rm -rf ./lwip-posix/Third_Party/STM32CubeF7
-	clean_subdirectory cmsis-posix 
-	clean_subdirectory lwip-posix 
-	clean_subdirectory mros2
-	cd cmake-build
-	rm -rf ./*
 	cd ..
 fi
 

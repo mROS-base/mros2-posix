@@ -84,8 +84,8 @@ Move to mros2-posix and build with the target app name (please see workspace/REA
 
 ```
 $ cd mros2-posix
-$ bash build.bash pub_string clean
-$ bash build.bash pub_string all
+$ bash build.bash clean
+$ bash build.bash all pub_string
 ```
 
 Once build process can be completed, you can find mros2-posix as the binary on cmake-build. 
