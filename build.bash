@@ -16,24 +16,18 @@ APPNAME=${2}
 
 function clean_subdirectory()
 {
-	rm -rf ${1}/cmake_build/CMakeFiles
-	rm -f ${1}/cmake_build/cmake_install.cmake
-	rm -f ${1}/cmake_build/CMakeCache.txt
-	rm -f ${1}/cmake_build/install_manifest.txt
-	rm -f ${1}/cmake_build/*.a
-	rm -f ${1}/cmake_build/Makefile
-	rm -rf ${1}/public/*
+	rm -rf ${1}/cmake_build
+	rm -rf ${1}/public
 }
 if [ ${OPT} == "clean" ];
 then
 	echo "build operation is set to clean"
+	rm -rf ./cmsis-posix/Third_Party/FreeRTOS
 	rm -rf ./lwip-posix/Third_Party/STM32CubeF7
-	clean_subdirectory cmsis-posix 
-	clean_subdirectory lwip-posix 
+	clean_subdirectory cmsis-posix
+	clean_subdirectory lwip-posix
 	clean_subdirectory mros2
-	cd cmake_build
-	rm -rf ./*
-	cd ..
+	rm -rf cmake_build/
 	echo "build clean is completed"
 	exit 0
 fi
