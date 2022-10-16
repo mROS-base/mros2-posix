@@ -27,28 +27,31 @@ Author: i11 - Embedded Software, RWTH Aachen University
 
 #include "rtps/common/types.h"
 
-namespace rtps {
+namespace rtps
+{
 
 #define IS_LITTLE_ENDIAN 1
 
-namespace Config {
+namespace Config
+{
 const VendorId_t VENDOR_ID = {13, 37};
 const std::array<uint8_t, 4> IP_ADDRESS = {
-    192, 168, 11, 3}; // Needs to be set in lwipcfg.h too.
+  192, 168, 11, 3
+}; // Needs to be set in lwipcfg.h too.
 const GuidPrefix_t BASE_GUID_PREFIX{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9};
 
 const uint8_t DOMAIN_ID = 0; // 230 possible with UDP
 const uint8_t MAX_NUM_PARTICIPANTS = 2;
 const uint8_t NUM_STATELESS_WRITERS =
-    MAX_NUM_PARTICIPANTS + 1; // Required + Additional
+  MAX_NUM_PARTICIPANTS + 1; // Required + Additional
 const uint8_t NUM_STATELESS_READERS =
-    MAX_NUM_PARTICIPANTS + 1; // Required + Additional
+  MAX_NUM_PARTICIPANTS + 1; // Required + Additional
 const uint8_t NUM_STATEFUL_READERS =
-    4; // 1-4 required per participant depending on what they do and to whom
-       // they match
+  4; // 1-4 required per participant depending on what they do and to whom
+// they match
 const uint8_t NUM_STATEFUL_WRITERS =
-    4; // 1-4 required per participant depending on what they do and to whom
-       // they match
+  4; // 1-4 required per participant depending on what they do and to whom
+// they match
 const uint8_t NUM_WRITERS_PER_PARTICIPANT = 4;
 const uint8_t NUM_READERS_PER_PARTICIPANT = 4;
 const uint8_t NUM_WRITER_PROXIES_PER_READER = 3;
@@ -70,16 +73,18 @@ const uint16_t SPDP_WRITER_STACKSIZE = 550;    // byte
 const uint16_t SF_WRITER_HB_PERIOD_MS = 500;
 const uint16_t SPDP_RESEND_PERIOD_MS = 10000;
 const uint8_t SPDP_CYCLECOUNT_HEARTBEAT =
-    2; // skip x SPDP rounds before checking liveliness
+  2; // skip x SPDP rounds before checking liveliness
 const uint8_t SPDP_WRITER_PRIO = 3;
 const uint8_t SPDP_MAX_NUMBER_FOUND_PARTICIPANTS = 5;
 const uint8_t SPDP_MAX_NUM_LOCATORS = 5;
 const Duration_t SPDP_DEFAULT_REMOTE_LEASE_DURATION = {
-    100, 0}; // Default lease duration for remote participants, usually
-             // overwritten by remote info
+  100, 0
+}; // Default lease duration for remote participants, usually
+// overwritten by remote info
 const Duration_t SPDP_MAX_REMOTE_LEASE_DURATION = {
-    180,
-    0}; // Absolute maximum lease duration, ignoring remote participant info
+  180,
+  0
+}; // Absolute maximum lease duration, ignoring remote participant info
 
 const int MAX_NUM_UDP_CONNECTIONS = 10;
 
@@ -90,10 +95,10 @@ const int THREAD_POOL_READER_PRIO = 3;
 const int THREAD_POOL_WORKLOAD_QUEUE_LENGTH = 10;
 
 constexpr int OVERALL_HEAP_SIZE =
-    THREAD_POOL_NUM_WRITERS * THREAD_POOL_WRITER_STACKSIZE +
-    THREAD_POOL_NUM_READERS * THREAD_POOL_READER_STACKSIZE +
-    MAX_NUM_PARTICIPANTS * SPDP_WRITER_STACKSIZE +
-    NUM_STATEFUL_WRITERS * HEARTBEAT_STACKSIZE;
+  THREAD_POOL_NUM_WRITERS * THREAD_POOL_WRITER_STACKSIZE +
+  THREAD_POOL_NUM_READERS * THREAD_POOL_READER_STACKSIZE +
+  MAX_NUM_PARTICIPANTS * SPDP_WRITER_STACKSIZE +
+  NUM_STATEFUL_WRITERS * HEARTBEAT_STACKSIZE;
 } // namespace Config
 } // namespace rtps
 

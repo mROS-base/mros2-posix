@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*! 
+/*!
  * @file HelloWorld.h
  * This header file contains the declaration of the described types in the IDL file.
  *
@@ -34,10 +34,9 @@ extern "C"
  * @brief This struct represents the structure HelloWorld defined by the user in the IDL file.
  * @ingroup HELLOWORLD
  */
-typedef struct HelloWorld
-{
-    uint32_t index;
-    char message[255];
+typedef struct HelloWorld {
+  uint32_t index;
+  char message[255];
 
 } HelloWorld;
 

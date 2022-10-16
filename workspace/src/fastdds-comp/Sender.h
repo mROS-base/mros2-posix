@@ -15,25 +15,28 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace rtps{
-    namespace tests{
+namespace rtps
+{
+namespace tests
+{
 
-        class Sender{
-        public:
-            Sender(uint32_t numSamples);
-            void run();
+class Sender
+{
+public:
+  Sender(uint32_t numSamples);
+  void run();
 
-        private:
-            Domain m_domain;
-            Writer* mp_dataWriter;
+private:
+  Domain m_domain;
+  Writer* mp_dataWriter;
 
-            uint32_t m_numSamples;
-            uint32_t m_index;
+  uint32_t m_numSamples;
+  uint32_t m_index;
 
-            void prepareRTPS();
-            void runWithIndex(uint32_t index);
-        };
-    }
+  void prepareRTPS();
+  void runWithIndex(uint32_t index);
+};
+}
 }
 
 #endif //RTPS_SENDER_H

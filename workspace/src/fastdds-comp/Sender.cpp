@@ -22,67 +22,71 @@
 using rtps::tests::Sender;
 
 Sender::Sender(uint32_t numSamples)
-    : m_numSamples(numSamples), m_index(1){
-    prepareRTPS();
+  : m_numSamples(numSamples), m_index(1)
+{
+  prepareRTPS();
 }
 
-void Sender::prepareRTPS(){
-    
-    auto part = m_domain.createParticipant();
-    if(part == nullptr){
-       std::cout << "Failed to create participant\n";
-        return;
-    }
-    m_domain.completeInit();
-    //mp_dataWriter = m_domain.createWriter(*part, "HelloWorldTopic", "HelloWorld", true);
-    mp_dataWriter = m_domain.createWriter(*part, "HelloWorldTopic", "HelloWorld", false);
+void Sender::prepareRTPS()
+{
 
-    if(mp_dataWriter == nullptr){
-        std::cout << "Failed to create endpoints.\n";
-        return;
-    }
+  auto part = m_domain.createParticipant();
+  if(part == nullptr) {
+    std::cout << "Failed to create participant\n";
+    return;
+  }
+  m_domain.completeInit();
+  //mp_dataWriter = m_domain.createWriter(*part, "HelloWorldTopic", "HelloWorld", true);
+  mp_dataWriter = m_domain.createWriter(*part, "HelloWorldTopic", "HelloWorld", false);
+
+  if(mp_dataWriter == nullptr) {
+    std::cout << "Failed to create endpoints.\n";
+    return;
+  }
 
 }
 
-void Sender::run() {
-    std::cout << "Waiting 1 sec for startup...." << '\n';
-    sys_msleep(1000); // Wait for initialization
-    std::cout << "Go!" << '\n';
+void Sender::run()
+{
+  std::cout << "Waiting 1 sec for startup...." << '\n';
+  sys_msleep(1000); // Wait for initialization
+  std::cout << "Go!" << '\n';
 
-    printf("Sending HelloWorldPackets: %d\n", m_numSamples);
+  printf("Sending HelloWorldPackets: %d\n", m_numSamples);
 
-    //for (uint32_t i = 0; i < m_numSamples; i++) {
-    while (true) {
-        runWithIndex(m_index);
-        printf("Hello WorldPacket sent: Index %d \n", m_index);
-        m_index++;
-        sys_msleep(1000);
-    }
+  //for (uint32_t i = 0; i < m_numSamples; i++) {
+  while (true) {
+    runWithIndex(m_index);
+    printf("Hello WorldPacket sent: Index %d \n", m_index);
+    m_index++;
+    sys_msleep(1000);
+  }
 }
 
-void Sender::runWithIndex(uint32_t index){
-    struct HelloWorld hw;
+void Sender::runWithIndex(uint32_t index)
+{
+  struct HelloWorld hw;
 
-    hw.index = index;
-    strcpy(hw.message, "HelloWorld");
+  hw.index = index;
+  strcpy(hw.message, "HelloWorld");
 
-    uint32_t tsize = HelloWorld_size_of_topic(&hw, 0) + 4;
+  uint32_t tsize = HelloWorld_size_of_topic(&hw, 0) + 4;
 
-    uint8_t buffer[tsize];
+  uint8_t buffer[tsize];
 
-    ucdrBuffer writer;
-    ucdr_init_buffer(&writer, buffer, tsize);
+  ucdrBuffer writer;
+  ucdr_init_buffer(&writer, buffer, tsize);
 
-    const uint16_t zero_options = 0;
-    ucdr_serialize_array_uint8_t(&writer, rtps::SMElement::SCHEME_CDR_LE.data(), rtps::SMElement::SCHEME_CDR_LE.size());
-    ucdr_serialize_uint16_t(&writer, zero_options);
+  const uint16_t zero_options = 0;
+  ucdr_serialize_array_uint8_t(&writer, rtps::SMElement::SCHEME_CDR_LE.data(), rtps::SMElement::SCHEME_CDR_LE.size());
+  ucdr_serialize_uint16_t(&writer, zero_options);
 
-    HelloWorld_serialize_topic(&writer, &hw);
-    auto change = mp_dataWriter->newChange(rtps::ChangeKind_t::ALIVE, buffer, tsize);
-    if(change == nullptr){
-        std::cout << "History full. Abort. \n";
-        return;
-    }
+  HelloWorld_serialize_topic(&writer, &hw);
+  auto change = mp_dataWriter->newChange(rtps::ChangeKind_t::ALIVE, buffer, tsize);
+  if(change == nullptr) {
+    std::cout << "History full. Abort. \n";
+    return;
+  }
 
 }
 

@@ -11,26 +11,29 @@
 
 #include <vector>
 
-namespace rtps {
-    namespace tests {
+namespace rtps
+{
+namespace tests
+{
 
-        class Receiver {
-        public:
-            explicit Receiver(uint32_t maxMsgSizeInBytes);
+class Receiver
+{
+public:
+  explicit Receiver(uint32_t maxMsgSizeInBytes);
 
-            void run();
+  void run();
 
-        private:
-            Domain m_domain;
-            Reader* mp_dataReader;
+private:
+  Domain m_domain;
+  Reader* mp_dataReader;
 
-            std::vector<uint8_t> m_buffer;
+  std::vector<uint8_t> m_buffer;
 
-            void prepareRTPS();
-            static void responderJumppad(void* vp_writer, const rtps::ReaderCacheChange& cacheChange);
-            void responderCallback(const rtps::ReaderCacheChange& cacheChange);
-        };
-    }
+  void prepareRTPS();
+  static void responderJumppad(void* vp_writer, const rtps::ReaderCacheChange& cacheChange);
+  void responderCallback(const rtps::ReaderCacheChange& cacheChange);
+};
+}
 }
 
 #endif //RTPS_RECEIVER_H

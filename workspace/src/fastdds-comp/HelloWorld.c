@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*! 
+/*!
  * @file HelloWorld.c
  * This source file contains the definition of the described types in the IDL file.
  *
@@ -26,28 +26,28 @@
 
 bool HelloWorld_serialize_topic(ucdrBuffer* writer, const HelloWorld* topic)
 {
-    (void) ucdr_serialize_uint32_t(writer, topic->index);
+  (void) ucdr_serialize_uint32_t(writer, topic->index);
 
-    (void) ucdr_serialize_string(writer, topic->message);
+  (void) ucdr_serialize_string(writer, topic->message);
 
-    return !writer->error;
+  return !writer->error;
 }
 
 bool HelloWorld_deserialize_topic(ucdrBuffer* reader, HelloWorld* topic)
 {
-    (void) ucdr_deserialize_uint32_t(reader, &topic->index);
+  (void) ucdr_deserialize_uint32_t(reader, &topic->index);
 
-    (void) ucdr_deserialize_string(reader, topic->message, 255);
+  (void) ucdr_deserialize_string(reader, topic->message, 255);
 
-    return !reader->error;
+  return !reader->error;
 }
 
 uint32_t HelloWorld_size_of_topic(const HelloWorld* topic, uint32_t size)
 {
-    uint32_t previousSize = size;
-    size += ucdr_alignment(size, 4) + 4;
+  uint32_t previousSize = size;
+  size += ucdr_alignment(size, 4) + 4;
 
-    size += ucdr_alignment(size, 4) + 4 + (uint32_t)strlen(topic->message) + 1;
+  size += ucdr_alignment(size, 4) + 4 + (uint32_t)strlen(topic->message) + 1;
 
-    return size - previousSize;
+  return size - previousSize;
 }
