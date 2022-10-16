@@ -30,7 +30,7 @@ target_include_directories(
 	#embeddedRTPS
 	PRIVATE ${MROS2_DIR}/embeddedRTPS/include
 	PRIVATE ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/include
-	PRIVATE ${RTPS_CONFIG_INCLUDE_DIR}
+	PRIVATE ${PROJECT_SOURCE_DIR}/../workspace/include
 
 	#mROS2
 	PRIVATE ${MROS2_DIR}/include
@@ -78,7 +78,7 @@ install(
 )
 install(
 	EXPORT			mros2-export 
-    FILE			mros2-config.cmake
+	FILE				mros2-config.cmake
 	DESTINATION		${INSTALL_CMAKE_DIR}
-    EXPORT_LINK_INTERFACE_LIBRARIES
+	EXPORT_LINK_INTERFACE_LIBRARIES
 )

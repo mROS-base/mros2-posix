@@ -80,7 +80,7 @@ function build_subdirectory()
 	then
 		cmake ..
 	else
-		cmake .. -D ${2} -D ${3}
+		cmake .. -D ${2}
 	fi
 	make
 	if [ -d ../public/include ]
@@ -98,7 +98,7 @@ then
 	build_subdirectory cmsis-posix 
 	download_files lwip-posix 
 	build_subdirectory lwip-posix 
-	build_subdirectory mros2 CMAKE_OS_POSIX=true RTPS_CONFIG_INCLUDE_DIR=`pwd`/workspace/include
+	build_subdirectory mros2 CMAKE_OS_POSIX=true
 	cd cmake_build
 	cmake .. -D CMAKE_APPNAME=${APPNAME}
 	make

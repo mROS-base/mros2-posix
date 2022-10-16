@@ -71,7 +71,7 @@ target_include_directories(
   PRIVATE ${mros2_DIR}/include/mros2_msgs
 
   #app
-  PRIVATE ${RTPS_CONFIG_INCLUDE_DIR}
+  PRIVATE ${PROJECT_SOURCE_DIR}/workspace/include
   PRIVATE ${PROJECT_SOURCE_DIR}/workspace/src/${MROS2_APPNAME}
 )
 target_link_libraries(mros2-posix mros2 lwip cmsis pthread)
