@@ -1,4 +1,3 @@
-
 set(CMAKE_C_FLAGS "-std=gnu99")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
@@ -20,4 +19,3 @@ find_package(cmsis REQUIRED)
 set(lwip_DIR "${PROJECT_SOURCE_DIR}/../lwip-posix/public")
 message(STATUS "lwip_DIR=${lwip_DIR}")
 find_package(lwip REQUIRED)
-
