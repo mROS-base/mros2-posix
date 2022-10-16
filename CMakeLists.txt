@@ -46,7 +46,7 @@ message(STATUS "mros2_DIR=${mros2_DIR}")
 find_package(mros2 REQUIRED)
 
 # Application combines (CMSIS LWIP EmbeddedRTPS mROS2)
-include(workspace/src/${MROS2_APPNAME}/Filelists.cmake) 
+include(workspace/${MROS2_APPNAME}/Filelists.cmake) 
 add_executable(mros2-posix 
   ${apl_SRCS}
 )
@@ -72,6 +72,6 @@ target_include_directories(
   # rtps/config.h
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   # app
-  PRIVATE ${PROJECT_SOURCE_DIR}/workspace/src/${MROS2_APPNAME}
+  PRIVATE ${PROJECT_SOURCE_DIR}/workspace/${MROS2_APPNAME}
 )
 target_link_libraries(mros2-posix mros2 lwip cmsis pthread)

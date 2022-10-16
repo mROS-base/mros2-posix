@@ -3,11 +3,6 @@
 if [ $# -gt 2 ] || [ $# -eq 0 ]
 then
   echo "Usage: $0 {all|up|clean} appname"
-  echo "appname:"
-  for i in `ls workspace/src`
-  do
-    echo "  $i"
-  done
   exit 1
 fi
 
@@ -35,19 +30,14 @@ fi
 if [ $# -ne 2 ]
 then
   echo "Usage: $0 {all|up|clean} appname"
-  echo "appname:"
-  for i in `ls workspace/src`
-  do
-    echo "  $i"
-  done
   exit 1
 fi
 
-if [ -d workspace/src/${APPNAME} ]
+if [ -d workspace/${APPNAME} ]
 then
   :
 else
-  echo "ERROR: can not find appname=${APPNAME} on workspace/src"
+  echo "ERROR: can not find appname=${APPNAME} on workspace/"
   exit 1
 fi
 
