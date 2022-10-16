@@ -64,14 +64,15 @@ enp4s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 Here, IP address and netmask are `192.168.11.3` and `255.255.255.0`, respectively.
 
-You need to edit the below files to set IP address and netmask need to be will be used on the following cases.
+You need to edit the below files to set IP address and netmask.
 
-* Setting `IP address` of embeddedRTPS config.h
-* Setting `IP address`  and `netmask` as arguments of mros-posix application
+* IP address and netmask to `workspace/include/netif.h`
+* IP address to `workspace/include/rtps/config.h`
 
 ## Quickstart
 
-This section explains how to build and execute mros2-posix application as a Linux/POSIX process, using `pub_string` as an example.
+This section explains how to build and execute mros2-posix application as a Linux/POSIX process, using `pub_string` as an example (please see workspace/README.md for another examples).
+
 
 ### Build for mros2-posix app
 
@@ -81,9 +82,9 @@ First of all, clone this repository. Note that **--recursive** is mandatory.
 git clone --recursive https://github.com/mROS-base/mros2-posix.git
 ```
 
-Please set your `IP address` on `IP_ADDRESS` in [mros2-posix/workspace/include/rtps/config.h](https://github.com/mROS-base/mros2-posix/blob/main/workspace/include/rtps/config.h).
+Please set your IP address to `IP_ADDRESS` in `workspace/include/rtps/config.h`, and IP address and netmask to `NETIF_IPADDR` and `NETIF_NETMASK` in `workspace/include/netif.h`.
 
-Move to mros2-posix and build with the target app name (please see workspace/README.md for another examples).
+Move to mros2-posix and build with the target app name.
 
 ```
 cd mros2-posix/

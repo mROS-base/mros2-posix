@@ -4,6 +4,7 @@
 #include "mros2_user_config.h"
 #include "std_msgs/msg/string.hpp"
 
+#include "netif.h"
 #include "netif_posix_add.h"
 
 #include <stdio.h>
@@ -16,11 +17,7 @@ static void userCallback(std_msgs::msg::String* msg)
 
 int main(int argc, char* argv[])
 {
-	if (argc != 3) {
-		printf("Usage: %s <ipaddr> <netmask>\n", argv[0]);
-		return 1;
-	}
-	netif_posix_add(argv[1], argv[2]);
+	netif_posix_add(NETIF_IPADDR, NETIF_NETMASK);
 
 	osKernelStart();
 

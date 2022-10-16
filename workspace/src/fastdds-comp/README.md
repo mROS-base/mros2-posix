@@ -7,8 +7,8 @@ This is a check application for mros2-posix communication layer(embeddedRTPS).
 
 ```
 $ cd mros2-posix
-$ bash build.bash fastdds-comp clean
-$ bash build.bash fastdds-comp all
+$ bash build.bash clean
+$ bash build.bash all fastdds-comp
 ```
 
 2. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(sender).
