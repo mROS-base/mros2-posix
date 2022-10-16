@@ -66,8 +66,8 @@ Here, IP address and netmask are `192.168.11.3` and `255.255.255.0`, respectivel
 
 You need to edit the below files to set IP address and netmask.
 
-* IP address and netmask to `workspace/include/netif.h`
-* IP address to `workspace/include/rtps/config.h`
+* IP address and netmask to `include/netif.h`
+* IP address to `include/rtps/config.h`
 
 ## Quickstart
 
@@ -82,7 +82,7 @@ First of all, clone this repository. Note that **--recursive** is mandatory.
 git clone --recursive https://github.com/mROS-base/mros2-posix.git
 ```
 
-Please set your IP address to `IP_ADDRESS` in `workspace/include/rtps/config.h`, and IP address and netmask to `NETIF_IPADDR` and `NETIF_NETMASK` in `workspace/include/netif.h`.
+Please set your IP address to `IP_ADDRESS` in `include/rtps/config.h`, and IP address and netmask to `NETIF_IPADDR` and `NETIF_NETMASK` in `include/netif.h`.
 
 Move to mros2-posix and build with the target app name.
 

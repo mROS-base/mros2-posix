@@ -29,9 +29,8 @@ add_subdirectory(cmsis-posix)
 # LWIP lib
 add_subdirectory(lwip-posix)
 
-# mros2 & EmbeddedRTPS lib
+# mros2 & embeddedRTPS lib
 set(CMAKE_OS_POSIX true)
-set(RTPS_CONFIG_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/workspace/include")
 add_subdirectory(mros2)
 
 set(cmsis_DIR "${PROJECT_SOURCE_DIR}/cmsis-posix/public")
@@ -55,23 +54,24 @@ add_executable(mros2-posix
 target_include_directories(
   mros2-posix 
 
-  #CMSIS INCLUDES
+  # CMSIS INCLUDES
   PRIVATE ${cmsis_DIR}/include
 
-  #LWIP INCLUDES
+  # LWIP INCLUDES
   PRIVATE ${lwip_DIR}/include/posix
   PRIVATE ${lwip_DIR}/include/lwip
   PRIVATE ${lwip_DIR}/include/system
 
-  #EmbeddedRTPS INCLUDES
+  # embeddedRTPS INCLUDES
   PRIVATE ${mros2_DIR}/include
 
-  #mROS2 INCLUDES
+  # mROS2 INCLUDES
   PRIVATE ${mros2_DIR}/include/mros2
   PRIVATE ${mros2_DIR}/include/mros2_msgs
 
-  #app
-  PRIVATE ${PROJECT_SOURCE_DIR}/workspace/include
+  # rtps/config.h
+  PRIVATE ${PROJECT_SOURCE_DIR}/include
+  # app
   PRIVATE ${PROJECT_SOURCE_DIR}/workspace/src/${MROS2_APPNAME}
 )
 target_link_libraries(mros2-posix mros2 lwip cmsis pthread)

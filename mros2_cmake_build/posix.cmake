@@ -26,19 +26,20 @@ add_library(
 target_include_directories(
   mros2
 
-  #embeddedRTPS
+  # embeddedRTPS
   PRIVATE ${MROS2_DIR}/embeddedRTPS/include
   PRIVATE ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/../workspace/include
+  # rtps/config.h
+  PRIVATE ${PROJECT_SOURCE_DIR}/../include
 
-  #mROS2
+  # mROS2
   PRIVATE ${MROS2_DIR}/include
   PRIVATE ${MROS2_DIR}/mros2_msgs
 
-  #CMSIS INCLUDES
+  # CMSIS INCLUDES
   PRIVATE ${cmsis_DIR}/include
 
-  #LWIP INCLUDES
+  # LWIP INCLUDES
   PRIVATE ${lwip_DIR}/include/lwip
   PRIVATE ${lwip_DIR}/include/posix
   PRIVATE ${lwip_DIR}/include/system
