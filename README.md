@@ -34,26 +34,13 @@ Please refer to the public documentation
 Install following tools for building mros2-posix application.
 
 ```
-apt-get update && apt-get install -y \
-	git	\
-	build-essential	\
-	wget	\
-	gcc	\
-	g++	\
-	vim	\
-	libssl-dev libreadline-dev zlib1g-dev \
-	make	\
-	autoconf \
-	automake \
-	pkg-config \
-	curl \
-	net-tools \
-	netcat \
-	cmake \
-	&& apt-get clean
-
-apt update -y
-apt upgrade -y
+sudo apt-get update && sudo apt-get install -y \
+  git wget \
+  build-essential gcc g++ \
+  libssl-dev libreadline-dev zlib1g-dev \
+  make autoconf automake cmake \
+  pkg-config curl \
+  net-tools netcat
 ```
 
 ### mros2-posix execution environment
