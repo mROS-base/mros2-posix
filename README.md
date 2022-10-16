@@ -6,23 +6,33 @@ mROS 2 consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP
 
 ## Supported environment
 
-* Host environment for development: ROS 2 and Ubuntu versions
-  - [ROS 2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) on Ubuntu 22.04 LTS
+* ROS 2 Host environment for communication:
+  * [ROS 2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) on Ubuntu 22.04 LTS
   * [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html) on Ubuntu 20.04 LTS
-  * the followings can be also used but not fully tested
-	  * WSL1 on Windows 10
-	  * docker compose
-* mROS 2 Build and execution environment
+* Host environment for building mros2-posix app:
   * Ubuntu 20.04 LTS
   * Ubuntu 18.04 LTS
+* mros2-posix execution environment:
+  * Ubuntu 20.04 LTS
+  * Ubuntu 18.04 LTS
+  * The followings can be also used but not fully tested
+	  * WSL1 on Windows 10
+	  * docker compose
+  * The embedded boards and RTOSes are not supported yet,,,
 
-# Envorinmental setup
+## Envorinmental setup
 
-### ROS 2 host environment
-Install [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation.html) on the ROS 2 host environment.
+### ROS 2 Host environment
 
-### mROS 2 host environment
-1. Install build tools on the mROS 2 host environment.
+Please refer to the public documentation
+
+* [Humble Hawksbill](https://docs.ros.org/en/humble/Installation.html) on Ubuntu 22.04 LTs
+* [Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation.html) on Ubuntu 20.04 LTs
+
+### Host environment for building mros2-posix app:
+
+Install following tools for building mros2-posix application.
+
 ```
 apt-get update && apt-get install -y \
 	git	\
@@ -45,29 +55,38 @@ apt-get update && apt-get install -y \
 apt update -y
 apt upgrade -y
 ```
-2. Please check the `IP address` and `netmask` of the host environment's ethernet connecting on your LAN.
 
-Example:
+### mros2-posix execution environment
+
+Please check the IP address and netmask of the execution environment. 
+
+Example (ethernet port `enp4s0` in this case):
 
 ```
 $ ifconfig
-  :
-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 192.168.11.49  netmask 255.255.255.0  broadcast 192.168.11.255
-        inet6 fe80::8877:2824:2cca:6ac6  prefixlen 64  scopeid 0xfd<compat,link,site,host>
-  :
+<sniped.>
+enp4s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.11.3  netmask 255.255.255.0  broadcast 192.168.11.255
+        ether cc:30:80:3a:7a:de  txqueuelen 1000  (Ethernet)
+        RX packets 1292708  bytes 964243524 (964.2 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 920815  bytes 124650942 (124.6 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+<sniped.>
 ```
 
-`IP address` and `netmask` will be used on the following cases.
+Here, IP address and netmask are `192.168.11.3` and `255.255.255.0`, respectively.
+
+You need to edit the below files to set IP address and netmask need to be will be used on the following cases.
 
 * Setting `IP address` of embeddedRTPS config.h
 * Setting `IP address`  and `netmask` as arguments of mros-posix application
 
-
 ## Quickstart
-This section explains how to build and execute mROS 2 with Linux process, using `pub_string` application as an example.
 
-### Build for mROS 2 app
+This section explains how to build and execute mros2-posix application as a Linux/POSIX process, using `pub_string` as an example.
+
+### Build for mros2-posix app
 
 First of all, clone this repository. Note that **--recursive** is mandatory.
 
@@ -80,7 +99,7 @@ Please set your `IP address` on `IP_ADDRESS` in [mros2-posix/workspace/include/r
 Move to mros2-posix and build with the target app name (please see workspace/README.md for another examples).
 
 ```
-cd mros2-posix
+cd mros2-posix/
 bash build.bash clean
 bash build.bash all pub_string
 ```
@@ -89,17 +108,18 @@ Once build process can be completed, you can find `mros2-posix` executable in `c
 
 ### Run the example
 
-### mROS 2 host environment
-Run the mros2-posix with your host `IP address` and `netmask`.
+#### mros2-posix environment
+
+Run the mros2-posix with your IP address and netmask.
 
 ```
-./cmake_build/mros2-posix <IP address> <netmask>
+./cmake_build/mros2-posix <IPaddr> <netmask>
 ```
 
 Example:
 
 ```
-$ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0
+$ ./cmake_build/mros2-posix 192.168.11.3 255.255.255.0
   :
 LOG_NOTICE : 00000000.128 : thread_udp_recv:UP: mcp=0x7fb1c0000e20
 LOG_DEBUG : 00000000.129 : [MROS2LIB] successfully created participant
@@ -116,12 +136,12 @@ LOG_NOTICE : 00000005.186 : publishing msg: 'Hello from mROS 2!! 5'
 LOG_NOTICE : 00000006.198 : publishing msg: 'Hello from mROS 2!! 6'
 ```
 
-
 ### ROS 2 host environment
+
 Launch ROS 2 topic echo node.
 
 ```
-source /opt/ros/foxy/setup.bash
+source /opt/ros/humble/setup.bash   # or, source /opt/ros/foxy/setup.bash
 ros2 topic echo /to_stm
 ```
 
@@ -140,13 +160,15 @@ data: Hello from mROS 2!! 8
 ```
 
 ## Example applications
+
 Please see [workspace](https://github.com/mROS-base/mros2-posix/tree/main/workspace) for example applications.
 
 ## Submodules and Licenses
+
 The source code of this repository itself is published under Apache License 2.0.
 Please note that this repository contains the following stacks as the submodules, and also check their Licenses.
 
 * [mros2](https://github.com/mROS-base/mros2): the pub/sub APIs compatible with ROS 2 Rclcpp
   * [embeddedRTPS](https://github.com/mROS-base/embeddedRTPS): RTPS communication layer (including lwIP and Micro-CDR)
-* [cmsis-posix](https://github.com/mROS-base/cmsis-posix): Interface layer between CMSIS OS API and Posix based OS(Linux)
-* [lwip-posix](https://github.com/mROS-base/lwip-posix): LwIP UDP/IP implementation based on Posix OS(Linux)
+* [cmsis-posix](https://github.com/mROS-base/cmsis-posix): Interface layer between CMSIS OS API and POSIX compiliant kernel (e.g., Linux)
+* [lwip-posix](https://github.com/mROS-base/lwip-posix): LwIP UDP/IP implementation based on POSIX compliant kernel (e.g., Linux)
