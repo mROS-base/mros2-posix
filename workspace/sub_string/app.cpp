@@ -1,7 +1,6 @@
 #include "cmsis_os.h"
 
 #include "mros2.h"
-#include "mros2_user_config.h"
 #include "std_msgs/msg/string.hpp"
 
 #include "netif.h"
@@ -31,8 +30,4 @@ int main(int argc, char* argv[])
   mros2::spin();
 
   return 0;
-}
-int mros2_get_submsg_count(void)
-{
-  return 10;
 }
