@@ -14,6 +14,7 @@ function clean_subdirectory()
   rm -rf ${1}/cmake_build
   rm -rf ${1}/public
 }
+
 if [ ${OPT} == "clean" ];
 then
   echo "build operation is set to clean"
@@ -21,7 +22,7 @@ then
   rm -rf ./lwip-posix/Third_Party/STM32CubeF7
   clean_subdirectory cmsis-posix
   clean_subdirectory lwip-posix
-  clean_subdirectory mros2
+  #clean_subdirectory mros2
   rm -rf cmake_build/
   echo "build clean is completed"
   exit 0
@@ -56,6 +57,7 @@ function download_files()
   bash Third_Party/download.bash
   cd ..
 }
+
 function build_subdirectory()
 {
   local dir=${1}/cmake_build
@@ -82,13 +84,33 @@ function build_subdirectory()
   cd ../..
 }
 
+# generate of header file for template functions of MsgType
+function generate_template_functions()
+{
+	MROS2DIR=../mros2
+	TEMPLATESGEN_FILE=${MROS2DIR}/mros2_header_generator/templates_generator.py
+
+	echo "INFO: generate header file for template functions of MsgType"
+	cd workspace
+	python3 ${TEMPLATESGEN_FILE} ${APPNAME}
+	if [ $? -eq 0 ];
+	then
+	  echo "INFO: header fille for template function of ${APPNAME}'s MsgType is successfully generated"
+	else
+	  echo "ERROR: failed to generate header fille for template function of ${APPNAME}'s MsgType"
+	  exit 1
+	fi
+	cd ..
+}
+
 if [ ${OPT} = "all" ]
 then
   download_files cmsis-posix
   build_subdirectory cmsis-posix 
   download_files lwip-posix 
   build_subdirectory lwip-posix 
-  build_subdirectory mros2 CMAKE_OS_POSIX=true
+  generate_template_functions
+  #build_subdirectory mros2 CMAKE_OS_POSIX=true
   cd cmake_build
   cmake .. -D CMAKE_APPNAME=${APPNAME}
   make
