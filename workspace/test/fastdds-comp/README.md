@@ -14,13 +14,13 @@ $ bash build.bash all fastdds-comp
 2. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(sender).
 
 ```
-$ ./cmake-build/mros2-posix <IP address> <netmask> send
+$ ./cmake_build/mros2-posix <IP address> <netmask> send
 ```
 
 Example:
 
 ```
-$ ./cmake-build/mros2-posix 192.168.11.49 255.255.255.0 send
+$ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0 send
   :
 Sending HelloWorldPackets: 10
 Hello WorldPacket sent: Index 1
@@ -35,13 +35,13 @@ Hello WorldPacket sent: Index 7
 3. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(receiver).
 
 ```
-$ ./cmake-build/mros2-posix <IP address> <netmask>
+$ ./cmake_build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
 
 ```
-$ ./cmake-build/mros2-posix 192.168.11.50 255.255.255.0
+$ ./cmake_build/mros2-posix 192.168.11.50 255.255.255.0
   :
 Received Message HelloWorld with index 1
 Received Message HelloWorld with index 2

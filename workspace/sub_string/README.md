@@ -4,7 +4,7 @@ This is a sample application to subscribe `std_msgs/String` message.
 
 ## Build and Run
 
-1. Build mros2-posix on the host environment for development.
+1. Build mros2-posix on the develepment environment.
 Make sure to set `sub_string` as build.bash option.
 
 ```
@@ -35,7 +35,7 @@ publishing #4: std_msgs.msg.String(data='hello world')
 <sniped.>
 ```
 
-3. Run the mros2-posix on mros2-posix host environment.
+3. Run `mros2-posix` on the development environment.
 
 ```
 ./cmake-build/mros2-posix

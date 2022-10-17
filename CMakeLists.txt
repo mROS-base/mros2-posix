@@ -47,12 +47,12 @@ add_subdirectory(mros2)
 
 # Application combines (CMSIS LWIP EmbeddedRTPS mROS2)
 include(workspace/${MROS2_APPNAME}/Filelists.cmake) 
-add_executable(mros2-posix 
+add_executable(mros2-posix
   ${apl_SRCS}
 )
 
 target_include_directories(
-  mros2-posix 
+  mros2-posix
 
   # CMSIS INCLUDES
   PRIVATE ${cmsis_DIR}/include

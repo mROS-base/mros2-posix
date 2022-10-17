@@ -16,13 +16,13 @@ $ bash build.bash all udp_multicast
 2. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(sender).
 
 ```
-$ ./cmake-build/mros2-posix <IP address> <netmask> send
+$ ./cmake_build/mros2-posix <IP address> <netmask> send
 ```
 
 Example:
 
 ```
-$ ./cmake-build/mros2-posix 192.168.11.49 255.255.255.0 send
+$ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0 send
   :
 LOG_NOTICE : 00000000.007 : send data:port=7401 err=0
 LOG_NOTICE : 00000001.022 : send data:port=7401 err=0
@@ -37,13 +37,13 @@ LOG_NOTICE : 00000007.073 : send data:port=7401 err=0
 3. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(receiver).
 
 ```
-$ ./cmake-build/mros2-posix <IP address> <netmask>
+$ ./cmake_build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
 
 ```
-$ ./cmake-build/mros2-posix 192.168.11.50 255.255.255.0
+$ ./cmake_build/mros2-posix 192.168.11.50 255.255.255.0
   :
 LOG_NOTICE : 00000002.649 : recv data:addr=192.168.11.49 port=59676 payload=Hello World!!
 LOG_NOTICE : 00000003.663 : recv data:addr=192.168.11.49 port=59676 payload=Hello World!!

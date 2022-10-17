@@ -3,7 +3,7 @@
 This repository contains two types of applications:
 
 * Sample applications for mros2-posix
-* Check applications for mros2-posix communication layers(embeddedRTPS and lwip-posix) 
+* [currently not working,,, see #1] Test applications for mros2-posix communication layers(embeddedRTPS and lwip-posix)
 
 ## Sample applications for mros2-posix
 

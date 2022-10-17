@@ -1,24 +1,21 @@
 # mros2-posix
 
-mROS 2 (formly `mros2`) realizes a agent-less and lightweight runtime environment compatible with ROS 2 for embedded devices. mROS 2 mainly offers pub/sub APIs compatible with [rclcpp](https://docs.ros2.org/dashing/api/rclcpp/index.html) for embedded devices.
+mROS 2 (formly `mros2`) realizes a agent-less and lightweight runtime environment compatible with ROS 2 for embedded devices. mROS 2 mainly offers pub/sub APIs compatible with [rclcpp](https://docs.ros2.org/dashing/api/rclcpp/index.html) for embedded devices. mROS 2 consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP stack, and real-time kernel. 
 
-mROS 2 consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP stack, and real-time kernel. This repository provides the reference implementation(`mros2-posix`) of mROS 2 that can be operated on the `Linux process`. Please also check [mros2 repository](https://github.com/mROS-base/mros2) for more details and another implementations.
+This repository provides the implementation of `mros2` as the **pthread**. In other words, `mros2` nodes can be operated onto native Linux kernel and general-purpose computers (e.g., Ubuntu onto x64_PC or arm64_RPi4). We also provide the POSIX layer (`cmsis-posix` and `lwip-posix`) that are prepared for mROS 2 and embeddedRTPS .
+Please also check [mros2 repository](https://github.com/mROS-base/mros2) for more details and another implementations onto embedded devices.
 
 ## Supported environment
 
-* ROS 2 Host environment for communication:
+* ROS 2 environment as the communication partner (IOW, host environment):
   * [ROS 2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html) on Ubuntu 22.04 LTS
   * [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/index.html) on Ubuntu 20.04 LTS
-* Host environment for building mros2-posix app:
+* `mros2-posix` environment for building & executing app:
+  * Ubuntu 22.04 LTS
   * Ubuntu 20.04 LTS
-  * Ubuntu 18.04 LTS
-* mros2-posix execution environment:
-  * Ubuntu 20.04 LTS
-  * Ubuntu 18.04 LTS
   * The followings can be also used but not fully tested
 	  * WSL1 on Windows 10
 	  * docker compose
-  * The embedded boards and RTOSes are not supported yet,,,
 
 ## Envorinmental setup
 
@@ -29,7 +26,7 @@ Please refer to the public documentation
 * [Humble Hawksbill](https://docs.ros.org/en/humble/Installation.html) on Ubuntu 22.04 LTs
 * [Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation.html) on Ubuntu 20.04 LTs
 
-### Host environment for building mros2-posix app:
+### `mros2-posix` environment for building & executing app:
 
 Install following tools for building mros2-posix application.
 
@@ -42,8 +39,6 @@ sudo apt-get update && sudo apt-get install -y \
   pkg-config curl \
   net-tools netcat
 ```
-
-### mros2-posix execution environment
 
 Please check the IP address and netmask of the execution environment. 
 
@@ -62,7 +57,7 @@ enp4s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 <sniped.>
 ```
 
-Here, IP address and netmask are `192.168.11.3` and `255.255.255.0`, respectively.
+Here, IP address and netmask are `192.168.11.3` and `255.255.255.0`, respectively in this example.
 
 You need to edit the below files to set IP address and netmask.
 
@@ -84,7 +79,7 @@ git clone --recursive https://github.com/mROS-base/mros2-posix.git
 
 Please set your IP address to `IP_ADDRESS` in `include/rtps/config.h`, and IP address and netmask to `NETIF_IPADDR` and `NETIF_NETMASK` in `include/netif.h`.
 
-Move to mros2-posix and build with the target app name.
+Move to `mros2-posix/` and build with the target app name.
 
 ```
 cd mros2-posix/
@@ -96,18 +91,16 @@ Once build process can be completed, you can find `mros2-posix` executable in `c
 
 ### Run the example
 
-#### mros2-posix environment
-
-Run the mros2-posix with your IP address and netmask.
+Run the mros2-posix application.
 
 ```
-./cmake_build/mros2-posix <IPaddr> <netmask>
+./cmake_build/mros2-posix
 ```
 
-Example:
+Example log:
 
 ```
-$ ./cmake_build/mros2-posix 192.168.11.3 255.255.255.0
+$ ./cmake_build/mros2-posix
   :
 LOG_NOTICE : 00000000.128 : thread_udp_recv:UP: mcp=0x7fb1c0000e20
 LOG_DEBUG : 00000000.129 : [MROS2LIB] successfully created participant
@@ -126,7 +119,7 @@ LOG_NOTICE : 00000006.198 : publishing msg: 'Hello from mROS 2!! 6'
 
 ### ROS 2 host environment
 
-Launch ROS 2 topic echo node.
+Launch ROS 2 topic echo node on the ROS 2 host environment.
 
 ```
 source /opt/ros/humble/setup.bash   # or, source /opt/ros/foxy/setup.bash
