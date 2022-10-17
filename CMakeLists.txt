@@ -26,24 +26,24 @@ set(MROS2_APPNAME ${CMAKE_APPNAME})
 # CMSIS lib
 add_subdirectory(cmsis-posix)
 
-# LWIP lib
-add_subdirectory(lwip-posix)
-
-# mros2 & embeddedRTPS lib
-set(CMAKE_OS_POSIX true)
-add_subdirectory(mros2)
-
 set(cmsis_DIR "${PROJECT_SOURCE_DIR}/cmsis-posix/public")
 message(STATUS "cmsis_DIR=${cmsis_DIR}")
 find_package(cmsis REQUIRED)
+
+# LWIP lib
+add_subdirectory(lwip-posix)
 
 set(lwip_DIR "${PROJECT_SOURCE_DIR}/lwip-posix/public")
 message(STATUS "lwip_DIR=${lwip_DIR}")
 find_package(lwip REQUIRED)
 
-set(mros2_DIR "${PROJECT_SOURCE_DIR}/mros2/public")
+# mros2 & embeddedRTPS lib
+set(mros2_DIR "${PROJECT_SOURCE_DIR}/mros2")
 message(STATUS "mros2_DIR=${mros2_DIR}")
-find_package(mros2 REQUIRED)
+add_library(mros2 INTERFACE)
+
+set(CMAKE_OS_POSIX true)
+add_subdirectory(mros2)
 
 # Application combines (CMSIS LWIP EmbeddedRTPS mROS2)
 include(workspace/${MROS2_APPNAME}/Filelists.cmake) 
