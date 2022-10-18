@@ -5,6 +5,7 @@ project(mros2-posix-project
   VERSION 1.0.0
   LANGUAGES CXX C
 )
+
 set(debug true)
 set(CMAKE_C_FLAGS "-std=gnu99")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
@@ -73,5 +74,7 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   # app
   PRIVATE ${PROJECT_SOURCE_DIR}/workspace/${MROS2_APPNAME}
+  PRIVATE ${PROJECT_SOURCE_DIR}/workspace/custom_msgs
 )
+
 target_link_libraries(mros2-posix mros2 lwip cmsis pthread)

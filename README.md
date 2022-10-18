@@ -194,7 +194,6 @@ This repository contains some example applications in [workspace/](workspace/) t
 You can switch the example by specifying the second argument of `build.bash`.
 Of course you can also create a new program file and specify it as your own application.
 
-
 Please also check [mROS-base/mros2-host-examples](https://github.com/mROS-base/mros2-host-examples) repository for more detail about the host examples.
 
 ### echoback_string
@@ -216,6 +215,99 @@ Please also check [mROS-base/mros2-host-examples](https://github.com/mROS-base/m
   - and then, at second terminal: `$ ros2 run mros2_echoback_string pub_node`
   - or, at one terminal:
     - `$ ros2 launch mros2_echoback_string pubsub.launch.py`
+
+### pub_twist
+
+- Description:
+  - The mROS 2 node publishes `Twist` (`geometry_msgs::msg::Twist`) message to `cmd_vel` topic.
+  - This application requires to generated header files for `Twist` and `Vector3`. See detail in [<repo_root>/README.md#generating-header-files-for-custom-msgtypes](../README.md#generating-header-files-for-custom-msgtypes).
+- Host operation:
+  - `$ ros2 run mros2_sub_twist sub_node`
+  - or, `$ ros2 launch mros2_sub_twist sub.launch.py`
+
+### sub_pose
+
+- Description:
+  - The mROS 2 node subscibes `Pose` (`geometry_msgs::msg::Pose`) message to `cmd_vel` topic.
+  - This application requires to generated header files for `Pose`, `Point` and `Quartenion`. See detail in [<repo_root>/README.md#generating-header-files-for-custom-msgtypes](../README.md#generating-header-files-for-custom-msgtypes).
+- Host operation:
+  - `$ ros2 run mros2_pub_pose pub_node`
+  - or, `$ ros2 launch mros2_pub_pose pub.launch.py`
+
+## Files for the application
+
+On this platform, the mros2 application consists of the following files:
+
+- app.cpp: 
+  - main source of the application
+  - note that the file name must be this in order to generate the templates of pub/sub functions in the build step.
+- templates.hpp:
+  - the templates of pub/sub functions
+  - this file will be automatically generated/modified during the build step, so you do not have to care about this file
+
+## Generating header files for custom MsgTypes
+
+You can use almost any [built-in-types in ROS 2](https://docs.ros.org/en/rolling/Concepts/About-ROS-Interfaces.html#field-types) on the embedded device.
+
+In additon, you can define a customized message type (e.g., `Twist.msg`) in the same way as in ROS 2, and use its header file for your application. This section describes how to generate header files for your own MsgTypes (`geometry_msgs::msg::Twist` as an example).
+
+### Prepare .msg files
+
+`.msg` files are simple text files that describe the fields of a ROS message (see [About ROS 2 interface](https://docs.ros.org/en/rolling/Concepts/About-ROS-Interfaces.html)). In mros2, they are used to generate header files for messages in embedded applications.
+
+Prepare `Twist.msg` file and make sure it is in `workspace/custom_msgs/geometry_msgs/msg/`.
+
+```
+$ cat workspace/custom_msgs/geometry_msgs/msg/Twist.msg
+geometry_msgs/msg/Vector3 linear
+geometry_msgs/msg/Vector3 angular
+```
+
+In this example, `Twist` has a nested structure with `Vector3` as a child element. So you also need to prepare its file.
+
+```
+$ cat workspace/custom_msgs/geometry_msgs/msg/Vector3.msg
+float64 x
+float64 y
+float64 z
+```
+
+### Generate header files
+
+To generate header files for `Twist` and `Vector3`, run the following command in `workspace/`.
+
+```
+$ cd workspace
+$ python3 ../mros2/mros2_header_generator/header_generator.py geometry_msgs/msg/Twist.msg
+```
+
+Make sure header files for custom MsgType are generated in `custom_msgs/`
+
+```
+$ ls -R custom_msgs/
+custom_msgs/:
+geometry_msgs
+
+custom_msgs/geometry_msgs:
+msg
+
+custom_msgs/geometry_msgs/msg:
+twist.hpp  vector3.hpp  Twist.msg  Vector3.msg
+```
+
+You can now use them in your applicaton like this.
+
+```
+#include "mros2.hpp"
+#include "geometry_msgs/msg/vector3.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+
+int main(int argc, char * argv[])
+{
+<snip.>
+  pub = node.create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+<snip.>
+```
 
 ## Submodules and Licenses
 
