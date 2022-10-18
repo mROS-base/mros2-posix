@@ -1,3 +1,3 @@
 set(apl_SRCS
-	${PROJECT_SOURCE_DIR}/workspace/sub_string/app.cpp
+  ${PROJECT_SOURCE_DIR}/workspace/${MROS2_APPNAME}/app.cpp
 )
