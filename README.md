@@ -37,7 +37,7 @@ sudo apt-get update && sudo apt-get install -y \
   libssl-dev libreadline-dev zlib1g-dev \
   make autoconf automake cmake \
   pkg-config curl \
-  net-tools netcat
+  net-tools netcat jinja2
 ```
 
 Please check the IP address and netmask of the execution environment. 

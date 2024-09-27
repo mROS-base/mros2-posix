@@ -1,0 +1,115 @@
+name: Humble_test_with_docker_NativeROS_string
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    types: [opened, synchronize, labeled]
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    if: |
+      ((github.event.action == 'labeled') && (github.event.label.name == 'TESTING') && (github.base_ref == 'main' )) ||
+      ((github.event.action == 'synchronize') && (github.base_ref == 'main') && contains(github.event.pull_request.labels.*.name, 'TESTING')) ||
+      (github.ref_name == 'main')
+    container:
+      image: osrf/ros:${{ matrix.ros_distribution }}-desktop
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+        ros_distribution: [humble]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+      # docker-compose.yml を使ってコンテナを起動
+      - name: Build and run containers
+        run: docker-compose up -d
+      - name: Wait for containers to start
+        run: sleep 20  # コンテナが確実に起動するのを待つ時間を長くする
+      - name: List running containers
+        run: docker ps -a  # 全コンテナが起動しているか確認
+      - name: Show container logs  # コンテナのログを確認する
+        run: |
+          docker logs app1
+          docker logs app2
+      - name: Show IP addresses
+        run: |
+          docker exec app1 ip addr show eth0
+          docker exec app2 ip addr show eth0
+      - name: Test communication between containers (ping)
+        run: |
+          docker exec app1 ping -c 4 172.19.0.3  # app1 から app2 へのPing
+          docker exec app2 ping -c 4 172.19.0.2  # app2 から app1 へのPing
+      - name: Test TCP connection between containers (netcat)
+        run: |
+          # app2でポート8080をリスン
+          docker exec -d app2 bash -c "nc -l -p 8080"
+          # app1からapp2へのTCP接続を確認
+          docker exec app1 bash -c "echo 'Test' | nc -w 3 172.19.0.3 8080"
+      # app1: ビルドの準備 (chmod +x update_ip.sh と ./update_ip.sh の実行)
+      - name: Prepare build in mros
+        run: |
+          docker cp $GITHUB_WORKSPACE app1:/root/ws_mros  # ソースコードをapp1コンテナにコピー
+          docker exec app1 bash -c "
+          cd /root/ws_mros &&
+          chmod +x update_ip.sh &&  # 権限変更
+          ./update_ip.sh"  # IPアドレス更新スクリプトの実行
+      # app1: クリーンビルド
+      - name: Clean and build in mros
+        run: |
+          docker exec app1 bash -c "
+          cd /root/ws_mros &&
+          pwd &&
+          ls -la &&
+          bash build.bash clean &&  # クリーンアップ
+          bash build.bash all test_echoback_string"
+      # app2: のコードをコンテナにコピーしてビルド
+      - name: Clone Native test stub source code to app2 and build and run
+        run: |
+          docker exec app2 bash -c "
+          source /opt/ros/humble/setup.bash &&
+          cd &&
+          pwd &&
+          ls -la &&
+          git clone https://github.com/mROS-base/mros2-host-examples &&
+          cd mros2-host-examples &&
+          colcon build --packages-select mros2_echoreply_string &&
+          ls -la &&
+          source install/setup.bash"
+      - name: Run mROS and Native ROS
+        shell: bash
+        run : |
+          # テスト対象をバックグラウンドで実行
+          docker exec app2 bash -c "source /opt/ros/humble/setup.bash &&
+          cd mros2-host-examples &&
+          source install/setup.bash &&
+          ros2 run mros2_echoreply_string echoreply_node" &
+
+          docker exec app1 bash -c "cd /root/ws_mros && ./cmake_build/mros2-posix" &
+          mros_pid=$!  # テストプログラムのプロセスIDを取得
+
+          docker ps
+
+          # mROSが終了するまで待つ
+          wait $mros_pid
+          mros_status=$?
+          # 結果に基づいてCIの成否を判断
+          if [ $mros_status -eq 0 ] ;then
+            echo "Succeed pub/sub test process between mros2 and Native ROS"
+            exit 0
+          else
+            echo "Fail pub/sub test process between mros2 and Native ROS"
+            exit 1
+          fi
+      - name: Tear down containers
+        run: docker-compose down

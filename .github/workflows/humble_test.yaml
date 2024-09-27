@@ -1,0 +1,118 @@
+name: ci_humble
+
+on:
+  push:
+    branches:
+      - "main"
+      - "feat/add_ci_config"
+  pull_request:
+    types: [opened, synchronize, labeled]
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    if: |
+      ((github.event.action == 'labeled') && (github.event.label.name == 'TESTING') && (github.base_ref == 'main' )) ||
+      ((github.event.action == 'synchronize') && (github.base_ref == 'main') && contains(github.event.pull_request.labels.*.name, 'TESTING')) ||
+      (github.ref_name == 'main')
+    container:
+      image: osrf/ros:${{ matrix.ros_distribution }}-desktop
+    timeout-minutes: 3
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+        ros_distribution: [humble]
+        comm-target: [native , mros]
+        comm-data-type: [string, twist]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: update
+        run: sudo apt-get update
+      - name: setup and install tools
+        run: >
+          sudo apt-get install -y iproute2 git wget build-essential gcc g++ libssl-dev libreadline-dev 
+          zlib1g-dev make autoconf automake cmake pkg-config curl net-tools netcat python3-jinja2
+      - name: Clone Test Stub
+        uses: actions/checkout@v3
+        with:
+          repository: mROS-base/mros2-host-examples
+          path: ws_host/src/mros2-host-examples
+      - name: Update IP address
+        run: |
+          chmod +x update_ip.sh
+          ./update_ip.sh
+      - name: Generate Twist Header files
+        if: matrix.comm-data-type == 'twist'
+        shell: bash
+        run: |
+          cd workspace
+          python3 ../mros2/mros2_header_generator/header_generator.py geometry_msgs/msg/Twist.msg
+          cd -
+      - name: Build mROS
+        shell: bash
+        run: |
+          bash build.bash clean
+          bash build.bash all test_echoback_${{ matrix.comm-data-type }}
+          mv cmake_build/ test_echoback_${{ matrix.comm-data-type }}/
+      - name: Build Native ROS responder
+        if: matrix.comm-target == 'native'
+        shell: bash
+        run: |
+          cd ws_host/
+          source /opt/ros/humble/setup.bash
+          colcon build --packages-select mros2_echoreply_${{ matrix.comm-data-type }}
+      - name: Build mROS responder
+        if: matrix.comm-target == 'mros'
+        shell: bash
+        run: |
+          bash build.bash clean
+          bash build.bash all test_echoback_${{ matrix.comm-data-type }}_responder
+      - name: Run Testing mROS and Native ROS
+        if: matrix.comm-target == 'native'
+        shell: bash
+        run : |
+            ./test_echoback_${{ matrix.comm-data-type }}/mros2-posix &
+            mros_pid=$!  # mROSのプロセスIDを取得
+
+            # Native ROSをバックグラウンドで実行
+            cd ws_host/
+            source /opt/ros/humble/setup.bash
+            source install/setup.bash
+            ros2 run mros2_echoreply_${{ matrix.comm-data-type }} echoreply_node &
+
+            # mROSが終了するまで待つ
+            wait $mros_pid
+            mros_status=$?
+
+            # 結果に基づいてCIの成否を判断
+            if [ $mros_status -eq 0 ] ;then
+              echo "Succeed pub/sub test process between mros2 and Native ROS"
+              exit 0
+            else
+              echo "Fail pub/sub test process between mros2 and Native ROS"
+              exit 1
+            fi
+      - name: Run mROS and mROS
+        if: matrix.comm-target == 'mros'
+        shell: bash
+        run : |
+            ./test_echoback_${{ matrix.comm-data-type }}/mros2-posix &
+            mros_pid=$!  # テストプログラムのプロセスIDを取得
+
+            # テスト対象をバックグラウンドで実行
+            ./cmake_build/mros2-posix &
+
+            # mROSが終了するまで待つ
+            wait $mros_pid
+            mros_status=$?
+
+            # 結果に基づいてCIの成否を判断
+            if [ $mros_status -eq 0 ] ;then
+              echo "Succeed pub/sub test process between mros2 and Native ROS"
+              exit 0
+            else
+              echo "Fail pub/sub test process between mros2 and Native ROS"
+              exit 1
+            fi

@@ -1,0 +1,38 @@
+version: '3'
+services:
+  app1:
+    container_name: app1
+    image: osrf/ros:humble-desktop  # ROS Humble の Ubuntu ベースイメージを使用
+    command: >
+      bash -c "set -e &&
+      apt-get update &&
+      apt-get install -y iproute2 iputils-ping git wget build-essential gcc g++ libssl-dev libreadline-dev
+      zlib1g-dev make autoconf automake cmake pkg-config curl net-tools netcat python3-jinja2 &&
+      echo 'IP address:' &&
+      ip addr show eth0 &&
+      sleep 600"
+    networks:
+      test_net:
+        ipv4_address: 172.19.0.2
+
+  app2:
+    container_name: app2
+    image: osrf/ros:humble-desktop  # ROS Humble の Ubuntu ベースイメージを使用
+    command: >
+      bash -c "set -e &&
+      apt-get update &&
+      apt-get install -y iproute2 iputils-ping git wget build-essential gcc g++ libssl-dev libreadline-dev
+      zlib1g-dev make autoconf automake cmake pkg-config curl net-tools netcat python3-jinja2 &&
+      echo 'IP address:' &&
+      ip addr show eth0 &&
+      sleep 600"
+    networks:
+      test_net:
+        ipv4_address: 172.19.0.3
+
+networks:
+  test_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
