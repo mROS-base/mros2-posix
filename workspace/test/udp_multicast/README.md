@@ -7,21 +7,21 @@ This is a check application for mros2-posix communication layer(lwip-posix udp m
 
 1. Build mros2-posix on mROS 2 host environments(sender/receiver). Make sure to set udp_multicast as build.bash option.
 
-```
+```console
 $ cd mros2-posix
 $ bash build.bash clean
-$ bash build.bash all udp_multicast
+$ bash build.bash all test/udp_multicast
 ```
 
 2. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(sender).
 
-```
+```console
 $ ./cmake_build/mros2-posix <IP address> <netmask> send
 ```
 
 Example:
 
-```
+```console
 $ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0 send
   :
 LOG_NOTICE : 00000000.007 : send data:port=7401 err=0
@@ -36,13 +36,13 @@ LOG_NOTICE : 00000007.073 : send data:port=7401 err=0
 
 3. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(receiver).
 
-```
+```console
 $ ./cmake_build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
 
-```
+```console
 $ ./cmake_build/mros2-posix 192.168.11.50 255.255.255.0
   :
 LOG_NOTICE : 00000002.649 : recv data:addr=192.168.11.49 port=59676 payload=Hello World!!

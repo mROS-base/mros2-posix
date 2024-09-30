@@ -5,21 +5,21 @@ This is a check application for mros2-posix communication layer(embeddedRTPS).
 
 1. Build mros2-posix on mROS 2 host environments(sender/receiver). Make sure to set fastdds-comp as build.bash option.
 
-```
+```console
 $ cd mros2-posix
 $ bash build.bash clean
-$ bash build.bash all fastdds-comp
+$ bash build.bash all test/fastdds-comp
 ```
 
 2. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(sender).
 
-```
+```console
 $ ./cmake_build/mros2-posix <IP address> <netmask> send
 ```
 
 Example:
 
-```
+```console
 $ ./cmake_build/mros2-posix 192.168.11.49 255.255.255.0 send
   :
 Sending HelloWorldPackets: 10
@@ -34,13 +34,13 @@ Hello WorldPacket sent: Index 7
 
 3. Run the mros2-posix with your host `IP address` and `netmask` on mROS 2 host environment(receiver).
 
-```
+```console
 $ ./cmake_build/mros2-posix <IP address> <netmask>
 ```
 
 Example:
 
-```
+```console
 $ ./cmake_build/mros2-posix 192.168.11.50 255.255.255.0
   :
 Received Message HelloWorld with index 1

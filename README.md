@@ -30,7 +30,7 @@ Please refer to the public documentation
 
 Install following tools for building mros2-posix application.
 
-```
+```sh
 sudo apt-get update && sudo apt-get install -y \
   git wget \
   build-essential gcc g++ \
@@ -44,7 +44,7 @@ Please check the IP address and netmask of the execution environment.
 
 Example (ethernet port `enp4s0` in this case):
 
-```
+```console
 $ ifconfig
 <sniped.>
 enp4s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -72,7 +72,7 @@ This section explains how to build and execute mros2-posix application as a Linu
 
 First of all, clone this repository. Note that **--recursive** is mandatory.
 
-```
+```sh
 git clone --recursive https://github.com/mROS-base/mros2-posix.git
 ```
 
@@ -83,7 +83,7 @@ Please set your network information to the below file.
 
 Move to `mros2-posix/` and build with the target app name.
 
-```
+```sh
 cd mros2-posix/
 bash build.bash clean
 bash build.bash all echoback_string
@@ -95,13 +95,13 @@ Once build process is successfully completed, you can find `mros2-posix` executa
 
 Run the mros2-posix application.
 
-```
+```sh
 ./cmake_build/mros2-posix
 ```
 
 Example log:
 
-```
+```console
 $ ./cmake_build/mros2-posix
 ...(SNIPPED)...
 LOG_NOTICE : 00000000.101 : thread_udp_recv:UP: mcp=0x7f4e40000e00
@@ -127,7 +127,7 @@ publishing msg: 'Hello from mros2-posix onto Linux: 8'
 
 One of the easiest way to operate the host is using Docker. On the host terminal, type the command below.
 
-```
+```sh
 docker run --rm -it --net=host ros:humble /bin/bash \
   -c "source /opt/ros/humble/setup.bash &&
   cd &&
@@ -257,7 +257,7 @@ In additon, you can define a customized message type (e.g., `Twist.msg`) in the 
 
 Prepare `Twist.msg` file and make sure it is in `workspace/custom_msgs/geometry_msgs/msg/`.
 
-```
+```console
 $ cat workspace/custom_msgs/geometry_msgs/msg/Twist.msg
 geometry_msgs/msg/Vector3 linear
 geometry_msgs/msg/Vector3 angular
@@ -265,7 +265,7 @@ geometry_msgs/msg/Vector3 angular
 
 In this example, `Twist` has a nested structure with `Vector3` as a child element. So you also need to prepare its file.
 
-```
+```console
 $ cat workspace/custom_msgs/geometry_msgs/msg/Vector3.msg
 float64 x
 float64 y
@@ -276,14 +276,14 @@ float64 z
 
 To generate header files for `Twist` and `Vector3`, run the following command in `workspace/`.
 
-```
+```console
 $ cd workspace
 $ python3 ../mros2/mros2_header_generator/header_generator.py geometry_msgs/msg/Twist.msg
 ```
 
 Make sure header files for custom MsgType are generated in `custom_msgs/`
 
-```
+```console
 $ ls -R custom_msgs/
 custom_msgs/:
 geometry_msgs
@@ -297,7 +297,7 @@ twist.hpp  vector3.hpp  Twist.msg  Vector3.msg
 
 You can now use them in your applicaton like this.
 
-```
+```cpp
 #include "mros2.hpp"
 #include "geometry_msgs/msg/vector3.hpp"
 #include "geometry_msgs/msg/twist.hpp"
