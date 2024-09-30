@@ -37,7 +37,7 @@ sudo apt-get update && sudo apt-get install -y \
   libssl-dev libreadline-dev zlib1g-dev \
   make autoconf automake cmake \
   pkg-config curl \
-  net-tools netcat
+  net-tools netcat python3-jinja2
 ```
 
 Please check the IP address and netmask of the execution environment. 
@@ -63,6 +63,22 @@ You need to edit the below files to set IP address and netmask.
 
 * IP address and netmask to `include/netif.h`
 * IP address to `include/rtps/config.h`
+
+Alternatively, you can use the provided `update_ip.sh` script to automatically update these files according to your building environment. 
+The `update_ip.sh` script is designed to overwrite the IP address and netmask in `include/rtps/config.h` and `include/netif.h` files based on the current network configuration.
+
+Below is an example of using this script.
+
+```bash
+bash update_ip.sh
+```
+
+This script retrieves the current IP address and netmask of the system's active network interface and updates the specified files accordingly.
+Make sure to check the output to ensure the updates are correct before proceeding with the build.
+If multiple network interfaces are available, ensure the correct one is being used.
+
+For troubleshooting, verify that the script runs without errors.
+If you encounter issues, check that the necessary network tools are installed and that your system has an active network connection.
 
 ## Getting Started
 

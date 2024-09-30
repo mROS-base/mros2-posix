@@ -1,0 +1,113 @@
+name: Humble_buid_and_test_with_docker_NativeROS_string
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container:
+      image: osrf/ros:humble-desktop
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      # matrix:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+      # runs containers using docker-compose.yml
+      - name: Build and run containers
+        run: |
+          cd workspace/test/mros2
+          docker-compose up -d
+          cd -
+      - name: Wait for containers to start
+        run: sleep 20  # wait time for container startup.
+      - name: List running containers
+        run: docker ps -a  # Check if all containers are running.
+      - name: Show container logs
+        run: |
+          docker logs app1
+          docker logs app2
+      - name: Show IP addresses
+        run: |
+          docker exec app1 ip addr show eth0
+          docker exec app2 ip addr show eth0
+      - name: Test communication between containers (ping)
+        run: |
+          docker exec app1 ping -c 4 172.19.0.3  # app1 から app2 へのPing
+          docker exec app2 ping -c 4 172.19.0.2  # app2 から app1 へのPing
+      - name: Test TCP connection between containers (netcat)
+        run: |
+          # Listen port 8080 on app2
+          docker exec -d app2 bash -c "nc -l -p 8080"
+          # Check connection to app2 from app1
+          docker exec app1 bash -c "echo 'Test' | nc -w 3 172.19.0.3 8080"
+      # app1: prepare build (run chmod +x update_ip.sh and ./update_ip.sh)
+      - name: Prepare build in mros
+        run: |
+          docker cp $GITHUB_WORKSPACE app1:/root/ws_mros  # Copy source code to app1
+          docker exec app1 bash -c "
+          cd /root/ws_mros &&
+          chmod +x update_ip.sh &&  # Change grant
+          ./update_ip.sh"  # Run script to overwrite IP address.
+      # app1: clean and build
+      - name: Clean and build in mros
+        run: |
+          docker exec app1 bash -c "
+          cd /root/ws_mros &&
+          pwd &&
+          ls -la &&
+          bash build.bash clean &&
+          bash build.bash all test/mros2/test_echoback_string"
+      # app2:
+      - name: Clone Native test stub source code to app2 and build and run
+        run: |
+          docker exec app2 bash -c "
+          source /opt/ros/humble/setup.bash &&
+          cd &&
+          pwd &&
+          ls -la &&
+          git clone https://github.com/mROS-base/mros2-host-examples &&
+          cd mros2-host-examples &&
+          colcon build --packages-select mros2_echoreply_string &&
+          ls -la &&
+          source install/setup.bash"
+      - name: Run mROS and Native ROS
+        shell: bash
+        run : |
+          # Run native ROS respondeer in  background
+          docker exec app2 bash -c "source /opt/ros/humble/setup.bash &&
+          cd mros2-host-examples &&
+          source install/setup.bash &&
+          ros2 run mros2_echoreply_string echoreply_node" &
+
+          docker exec app1 bash -c "cd /root/ws_mros && ./cmake_build/mros2-posix" &
+          mros_pid=$!  # get mROS process id
+
+          docker ps
+
+          # Wait until mROS finishes
+          wait $mros_pid
+          mros_status=$?
+
+          # Judge CI success based on results
+          if [ $mros_status -eq 0 ] ;then
+            echo "Succeed pub/sub test process between mros2 and Native ROS"
+            exit 0
+          else
+            echo "Fail pub/sub test process between mros2 and Native ROS"
+            exit 1
+          fi
+      - name: Tear down containers
+        run: docker-compose down
