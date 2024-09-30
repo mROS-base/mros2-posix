@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# IPアドレスを取得
+# Retrieve IP address
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 if [ -z "$IP_ADDRESS" ]; then
     echo "Error: Failed to retrieve IP address."
     exit 1
 fi
 
-# ネットマスクを取得（IPアドレスに対応するネットマスクを抽出）
+# Retrieve netmask (extract the netmask corresponding to the IP address)
 INTERFACE=$(ip -o addr show | grep "$IP_ADDRESS" | awk '{print $2}')
 NETMASK=$(ip -o -f inet addr show $INTERFACE | awk '/inet/ {print $4}' | cut -d'/' -f2)
 if [ -z "$NETMASK" ]; then
@@ -15,7 +15,7 @@ if [ -z "$NETMASK" ]; then
     exit 1
 fi
 
-# CIDRからネットマスクを計算
+# Calculate netmask from CIDR
 function cidr_to_netmask() {
     local cidr=$1
     local mask=""
@@ -41,14 +41,14 @@ function cidr_to_netmask() {
 NETMASK=$(cidr_to_netmask $NETMASK)
 echo "Retrieved Netmask for IP $IP_ADDRESS: $NETMASK"
 
-# IPアドレスをドットで分割
+# Split the IP address by dots
 IFS='.' read -r -a IP_PARTS <<< "$IP_ADDRESS"
 
-# ネットマスクをドットで分割
+# Split the netmask by dots
 IFS='.' read -r -a NETMASK_PARTS <<< "$NETMASK"
 echo "Netmask parts: ${NETMASK_PARTS[0]}, ${NETMASK_PARTS[1]}, ${NETMASK_PARTS[2]}, ${NETMASK_PARTS[3]}"
 
-# include/rtps/config.h のIPアドレス置換
+# Replace the IP address in include/rtps/config.h
 
 echo "Running sed on include/rtps/config.h"
 sed -i "s/[[:space:]]*[0-9]\{1,3\},[[:space:]]*[0-9]\{1,3\},[[:space:]]*[0-9]\{1,3\},[[:space:]]*[0-9]\{1,3\}[[:space:]]*}; \
@@ -58,13 +58,13 @@ ${IP_PARTS[0]}, ${IP_PARTS[1]}, ${IP_PARTS[2]}, ${IP_PARTS[3]}};\
 include/rtps/config.h
 
 
-# include/netif.h のIPアドレスとネットマスク置換
+# Replace the IP address and netmask in include/netif.h
 sed -i 's/#define NETIF_IPADDR ".*"/#define NETIF_IPADDR "'$IP_ADDRESS'"/' include/netif.h
 sed -i 's/#define NETIF_NETMASK ".*"/#define NETIF_NETMASK "'$NETMASK'"/' include/netif.h
 
 
 
-# 結果を表示して確認
+# Display the result for confirmation
 echo "Updated IP Address: $IP_ADDRESS"
 echo "Updated include/rtps/config.h:"
 grep -E  'Needs to be set in lwipcfg.h too.' include/rtps/config.h
